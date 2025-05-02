@@ -2,7 +2,6 @@
 const API_KEY = config.API_KEY;
 const BASE_URL = config.BASE_URL;
 const API_URL = `${BASE_URL}/movie/popular?api_key=${API_KEY}&language=ko-KR&page=1`;
-const SEARCH_URL = `${BASE_URL}/search/movie?api_key=${API_KEY}&language=ko-KR&query=`;
 const IMG_URL = config.IMG_URL;
 
 // DOM 요소 선택
@@ -37,7 +36,7 @@ function getMovies(url) {
 
 // 영화 데이터를 화면에 표시하는 함수
 function displayMovies(movies) {
-    movieContainer.innerHTML = ''; // 기존 영화 카드 초기화
+    movieContainer.innerHTML = '';
 
     if (!movies || movies.length === 0) {
         movieContainer.innerHTML = '<p>검색 결과가 없습니다.</p>';
@@ -45,47 +44,68 @@ function displayMovies(movies) {
     }
 
     movies.forEach(movie => {
-        const { title, poster_path, vote_average, overview } = movie;
-        
-        //이미지
+        const { id, title, poster_path, vote_average, overview } = movie;
+
+        // 이미지 처리
         let posterUrl = '';
         if (poster_path) {
             posterUrl = IMG_URL + poster_path;
         } else {
             posterUrl = 'https://movie-phinf.pstatic.net/20210728_221/1627440327667GyoYj_JPEG/movie_image.jpg';
         }
-        
-        // 별점 표시
-        const rating = vote_average / 2;
-        let stars = '';
-        const fullStars = Math.floor(rating);
-        stars = '⭐'.repeat(fullStars);
-        if (rating % 1 >= 0.5) {
-            stars += '⭐';
-        }
-        
-        //요약 100자로 제한
-        let shortOverview = '요약이 없습니다.';
-        if (overview) {
-            if (overview.length > 100) {
-                shortOverview = overview.substring(0, 100) + '...';
-             } else {
-                  shortOverview = overview;
-             }
-        }
-        
-        // 영화 카드 HTML 생성
-        const movieEl = document.createElement('div');
-        movieEl.classList.add('movie-card');
-        movieEl.innerHTML = `
-            <img src="${posterUrl}" class="movie-poster" alt="${title}">
-            <div class="movie-info">
-                <h3 class="movie-title">${title}</h3>
-                <p class="movie-rating">${stars} (${rating.toFixed(1)})</p>
-                <p class="movie-overview">${shortOverview}</p>
-            </div>
-        `;
 
-        movieContainer.appendChild(movieEl);
+        // 별점 처리
+        const rating = vote_average / 2;
+        let stars = '⭐'.repeat(Math.floor(rating));
+        if (rating % 1 >= 0.5) stars += '⭐';
+
+        // 요약 처리
+        if (overview && overview.trim().length > 0) {
+            let shortOverview = '';
+            if (overview.length > 100) {
+                shortOverview = `${overview.substring(0, 100)}...`;
+            } else {
+                shortOverview = `${overview}`;
+            }
+            createMovieCard(title, posterUrl, stars, rating, shortOverview);
+        } else {
+            // 영어 데이터로 대체
+            const url = `${BASE_URL}/movie/${id}?api_key=${API_KEY}&language=en-US`;
+            fetch(url)
+                .then(function(res) {
+                    return res.json();
+                })
+                .then(function(data) {
+                    let engOverview = '요약이 없습니다.';
+                    if (data.overview && data.overview.trim().length > 0) {
+                        if (data.overview.length > 100) {
+                            engOverview = `${data.overview.substring(0, 100)}...`;
+                        } else {
+                            engOverview = `${data.overview}`;
+                        }
+                    }
+                    createMovieCard(title, posterUrl, stars, rating, engOverview);
+                })
+                .catch(function(err) {
+                    console.error(`영어 요약 가져오기 실패 (ID: ${id})`, err);
+                    createMovieCard(title, posterUrl, stars, rating, '요약이 없습니다.');
+                });
+        }
+        
     });
+}
+
+// 영화 카드 DOM 생성 함수
+function createMovieCard(title, posterUrl, stars, rating, overview) {
+    const movieEl = document.createElement('div');
+    movieEl.classList.add('movie-card');
+    movieEl.innerHTML = `
+        <img src="${posterUrl}" class="movie-poster" alt="${title}">
+        <div class="movie-info">
+            <h3 class="movie-title">${title}</h3>
+            <p class="movie-rating">${stars} (${rating.toFixed(1)})</p>
+            <p class="movie-overview">${overview}</p>
+        </div>
+    `;
+    movieContainer.appendChild(movieEl);
 }
