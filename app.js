@@ -2,6 +2,7 @@
 const API_KEY = config.API_KEY;
 const BASE_URL = config.BASE_URL;
 const API_URL = `${BASE_URL}/movie/popular?api_key=${API_KEY}&language=ko-KR&page=1`;
+const SEARCH_URL = `${BASE_URL}/search/movie?api_key=${API_KEY}&language=ko-KR&query=`;
 const IMG_URL = config.IMG_URL;
 
 // DOM 요소 선택
@@ -109,3 +110,13 @@ function createMovieCard(title, posterUrl, stars, rating, overview) {
     `;
     movieContainer.appendChild(movieEl);
 }
+
+// 검색 버튼 클릭 이벤트 처리
+searchButton.addEventListener('click', () => {
+    const searchTerm = searchInput.value.trim();
+    if (searchTerm) {
+        getMovies(SEARCH_URL + searchTerm);
+    } else {
+        alert('검색어를 입력해주세요.');
+    }
+});
