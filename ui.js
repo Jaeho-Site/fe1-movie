@@ -64,7 +64,9 @@ function createCard(id, title, posterUrl, stars, rating, overview) {
     movieEl.classList.add('movie-card');
     movieEl.setAttribute('data-id', id);
     movieEl.innerHTML = `
-        <img src="${posterUrl}" class="movie-poster" alt="${title}">
+        <div class="movie-poster">
+            <img src="${posterUrl}" alt="${title}">
+        </div>
         <div class="movie-info">
             <h3 class="movie-title">${title}</h3>
             <p class="movie-rating">${stars} (${rating.toFixed(1)})</p>
