@@ -27,6 +27,7 @@ function createCard(movie) {
             <img src="${movie.posterUrl}" alt="${movie.title}">
         </div>
         <div class="movie-info">
+            <button class="bookmark-btn">북마크</button>
             <h3 class="movie-title">${movie.title}</h3>
             <p class="movie-rating">${movie.stars} (${movie.rating.toFixed(1)})</p>
             <p class="movie-overview">${movie.shortOverview}</p>
@@ -48,8 +49,22 @@ function showMovieDetails(movieId) {
             alert(error.message || '영화 상세 정보를 가져오는데 실패했습니다.');
         });
 }
-
 movieContainer.addEventListener('click', function(e) {
+    // 북마크 버튼 클릭 시
+    if (e.target.classList.contains('bookmark-btn')) {
+        const card = e.target.closest('.movie-card');
+        if (card) {
+            const movieId = card.getAttribute('data-id');
+            if (movieId) {
+                let bookmarks = JSON.parse(localStorage.getItem('bookmarks') || '[]');
+                if (!bookmarks.includes(movieId)) {
+                    bookmarks.push(movieId);
+                    localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
+                }
+            }
+        }
+        return;
+    }
     let card = e.target.closest('.movie-card');
     if (card && movieContainer.contains(card)) {
         const movieId = card.getAttribute('data-id');
