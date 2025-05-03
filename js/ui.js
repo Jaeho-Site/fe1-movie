@@ -1,9 +1,7 @@
-// UI 요소들 선택
 const searchInput = document.getElementById('search-input');
 const searchButton = document.getElementById('search-button');
 const movieContainer = document.getElementById('movie-container');
 
-// 영화 목록 표시
 function addMovies(movies) {
     movieContainer.innerHTML = '';
 
@@ -11,13 +9,11 @@ function addMovies(movies) {
         movieContainer.innerHTML = '<p>검색 결과가 없습니다.</p>';
         return;
     }
-
     movies.forEach(movie => {
         createCard(movie);
     });
 }
 
-// 영화 카드 생성
 function createCard(movie) {
     const movieEl = document.createElement('div');
     movieEl.classList.add('movie-card');
@@ -33,23 +29,20 @@ function createCard(movie) {
             <p class="movie-overview">${movie.shortOverview}</p>
         </div>
     `;
-    // 개별 카드에 이벤트 리스너 제거 (이벤트 위임 적용)
     movieContainer.appendChild(movieEl);
 }
 
-// 영화 상세 정보 가져와 표시
 async function showMovieDetails(movieId) {
     try {
         const data = await movieAPI.fetchDetails(movieId);
-        modalUI.addModal(data); // modal.js의 함수 사용
-        // 페이지 히스토리에 상태 추가 (뒤로가기 지원)
+        modalUI.addModal(data); 
         history.pushState({id: movieId}, '', `?movie=${movieId}`);
     } catch (error) {
         alert(error.message || '영화 상세 정보를 가져오는데 실패했습니다.');
     }
 }
+
 movieContainer.addEventListener('click', function(e) {
-    // 북마크 버튼 클릭 시
     if (e.target.classList.contains('bookmark-btn')) {
         const card = e.target.closest('.movie-card');
         if (card) {

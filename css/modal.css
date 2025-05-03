@@ -6,7 +6,6 @@
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
     overflow: auto;
 }
 
@@ -18,26 +17,16 @@
     max-width: 800px;
     border-radius: 10px;
     position: relative;
-    animation: modalFadeIn 0.3s;
-}
-
-@keyframes modalFadeIn {
-    from {opacity: 0; transform: translateY(-50px);}
-    to {opacity: 1; transform: translateY(0);}
 }
 
 .close-btn {
     position: absolute;
     top: 10px;
     right: 20px;
-    color: #aaa;
+    color: gray;
     font-size: 28px;
     font-weight: bold;
     cursor: pointer;
-}
-
-.close-btn:hover {
-    color: black;
 }
 
 .modal-poster {
@@ -55,7 +44,7 @@
 .modal-title {
     margin-top: 0;
     margin-bottom: 15px;
-    color: #032541;
+    color: black;
 }
 
 .modal-info {
@@ -66,7 +55,6 @@
     line-height: 1.6;
 }
 
-/* 모달 반응형 설정 */
 @media (max-width: 768px) {
     .modal-content {
         margin: 10% auto;

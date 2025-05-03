@@ -28,6 +28,7 @@ async function fetchMovies(url) {
         return [];
     }
 }
+
 async function fetchEnOverview(movieId) {
     const url = `${BASE_URL}/movie/${movieId}?api_key=${API_KEY}&language=en-US`;
     try {
@@ -37,6 +38,7 @@ async function fetchEnOverview(movieId) {
         return { overview: null };
     }
 }
+
 async function fetchDetails(movieId) {
     const url = `${BASE_URL}/movie/${movieId}?api_key=${API_KEY}&language=ko-KR&append_to_response=credits`;
     try {
@@ -66,15 +68,14 @@ async function fetchDetails(movieId) {
         throw new Error('영화 상세 정보를 가져오는데 실패했습니다.');
     }
 }
+
 function processData(movie) {
-    // 포스터
     let posterUrl = '';
     if (movie.poster_path) {
         posterUrl = IMG_URL + movie.poster_path;
     } else {
         posterUrl = 'https://movie-phinf.pstatic.net/20210728_221/1627440327667GyoYj_JPEG/movie_image.jpg';
     }
-
     const rating = movie.vote_average / 2;
     let stars = '';
     for (let i = 0; i < Math.floor(rating); i++) stars += '⭐';
@@ -88,6 +89,7 @@ function processData(movie) {
         ...movie, posterUrl, rating, stars, shortOverview: overview
     };
 }
+
 const movieAPI = {
     API_URL,
     SEARCH_URL,
