@@ -1,0 +1,87 @@
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    overflow: auto;
+}
+
+.modal-content {
+    background-color: white;
+    margin: 5% auto;
+    padding: 20px;
+    width: 90%;
+    max-width: 800px;
+    border-radius: 10px;
+    position: relative;
+    animation: modalFadeIn 0.3s;
+}
+
+@keyframes modalFadeIn {
+    from {opacity: 0; transform: translateY(-50px);}
+    to {opacity: 1; transform: translateY(0);}
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-btn:hover {
+    color: black;
+}
+
+.modal-poster {
+    float: left;
+    width: 40%;
+    max-width: 300px;
+    margin-right: 20px;
+    border-radius: 5px;
+}
+
+.modal-details-content {
+    overflow: hidden;
+}
+
+.modal-title {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #032541;
+}
+
+.modal-info {
+    margin-bottom: 10px;
+}
+
+.modal-overview {
+    line-height: 1.6;
+}
+
+/* 모달 반응형 설정 */
+@media (max-width: 768px) {
+    .modal-content {
+        margin: 10% auto;
+        padding: 15px;
+    }
+    
+    .modal-poster {
+        float: none;
+        display: block;
+        width: 70%;
+        max-width: 250px;
+        margin: 0 auto 20px;
+    }
+    
+    .modal-details-content {
+        text-align: center;
+    }
+}

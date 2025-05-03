@@ -1,8 +1,7 @@
 // 페이지 로드 시 실행
 document.addEventListener('DOMContentLoaded', () => {
     // 모달 관련 이벤트 설정
-    movieUI.setModalEvents();
-    
+    modalUI.setModalEvents();
     // 인기 영화 데이터 로드
     movieAPI.fetchMovies(movieAPI.API_URL)
         .then(movies => {
