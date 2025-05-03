@@ -32,12 +32,7 @@ function createCard(movie) {
             <p class="movie-overview">${movie.shortOverview}</p>
         </div>
     `;
-    
-    // 카드 클릭 이벤트 - 모달 표시
-    movieEl.addEventListener('click', () => {
-        showMovieDetails(movie.id);
-    });
-    
+    // 개별 카드에 이벤트 리스너 제거 (이벤트 위임 적용)
     movieContainer.appendChild(movieEl);
 }
 
@@ -53,6 +48,16 @@ function showMovieDetails(movieId) {
             alert(error.message || '영화 상세 정보를 가져오는데 실패했습니다.');
         });
 }
+
+movieContainer.addEventListener('click', function(e) {
+    let card = e.target.closest('.movie-card');
+    if (card && movieContainer.contains(card)) {
+        const movieId = card.getAttribute('data-id');
+        if (movieId) {
+            showMovieDetails(movieId);
+        }
+    }
+});
 
 const movieUI = {
     addMovies,
