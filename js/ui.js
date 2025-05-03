@@ -38,16 +38,15 @@ function createCard(movie) {
 }
 
 // 영화 상세 정보 가져와 표시
-function showMovieDetails(movieId) {
-    movieAPI.fetchDetails(movieId)
-        .then(data => {
-            modalUI.addModal(data); // modal.js의 함수 사용
-            // 페이지 히스토리에 상태 추가 (뒤로가기 지원)
-            history.pushState({id: movieId}, '', `?movie=${movieId}`);
-        })
-        .catch(error => {
-            alert(error.message || '영화 상세 정보를 가져오는데 실패했습니다.');
-        });
+async function showMovieDetails(movieId) {
+    try {
+        const data = await movieAPI.fetchDetails(movieId);
+        modalUI.addModal(data); // modal.js의 함수 사용
+        // 페이지 히스토리에 상태 추가 (뒤로가기 지원)
+        history.pushState({id: movieId}, '', `?movie=${movieId}`);
+    } catch (error) {
+        alert(error.message || '영화 상세 정보를 가져오는데 실패했습니다.');
+    }
 }
 movieContainer.addEventListener('click', function(e) {
     // 북마크 버튼 클릭 시
