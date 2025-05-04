@@ -1,11 +1,11 @@
 document.addEventListener('DOMContentLoaded', async () => {
     modalUI.setModalEvents();
-    const movies = await movieAPI.fetchMovies(movieAPI.API_URL);
+    const movies = await movieAPI.fetchMovies();
     movieUI.addMovies(movies);
     movieUI.searchButton.addEventListener('click', async () => {
         const searchTerm = movieUI.searchInput.value.trim();
         if (searchTerm) {
-            const movies = await movieAPI.fetchMovies(movieAPI.SEARCH_URL + searchTerm);
+            const movies = await movieAPI.fetchMovies(searchTerm);
             movieUI.addMovies(movies);
         } else {
             alert('검색어를 입력해주세요.');
@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (e.key === 'Enter') {
             const searchTerm = movieUI.searchInput.value.trim();
             if (searchTerm) {
-                const movies = await movieAPI.fetchMovies(movieAPI.SEARCH_URL + searchTerm);
+                const movies = await movieAPI.fetchMovies(searchTerm);
                 movieUI.addMovies(movies);
             } else {
                 alert('검색어를 입력해주세요.');

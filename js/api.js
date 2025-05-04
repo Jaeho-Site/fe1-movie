@@ -1,53 +1,28 @@
-const API_KEY = config.API_KEY;
-const BASE_URL = config.BASE_URL;
-const API_URL = `${BASE_URL}/movie/popular?api_key=${API_KEY}&language=ko-KR&page=1`;
-const SEARCH_URL = `${BASE_URL}/search/movie?api_key=${API_KEY}&language=ko-KR&query=`;
-const IMG_URL = config.IMG_URL;
+const BASE_URL = env.BASE_URL;
+const IMG_URL = env.IMG_URL;
 
-async function fetchMovies(url) {
-    const options = {
-        method: 'GET',
-        headers: {
-            accept: 'application/json'
-        }
-    };
+async function fetchMovies(query) {
+    let url = '';
+    if (query) {
+        url = `${BASE_URL}/movies?query=${encodeURIComponent(query)}`;
+    } else {
+        url = `${BASE_URL}/movies`;
+    }
     try {
-        const response = await fetch(url, options);
+        const response = await fetch(url);
         const data = await response.json();
         if (!data.results) return [];
-        return await Promise.all(
-            data.results.map(async movie => {
-                if (!movie.overview || movie.overview.trim() === '') {
-                    const enData = await fetchEnOverview(movie.id);
-                    movie.overview = enData.overview || '요약이 없습니다.';
-                }
-                return processData(movie);
-            })
-        );
+        return data.results.map(processData);
     } catch (error) {
         return [];
     }
 }
 
-async function fetchEnOverview(movieId) {
-    const url = `${BASE_URL}/movie/${movieId}?api_key=${API_KEY}&language=en-US`;
-    try {
-        const res = await fetch(url);
-        return await res.json();
-    } catch (err) {
-        return { overview: null };
-    }
-}
-
 async function fetchDetails(movieId) {
-    const url = `${BASE_URL}/movie/${movieId}?api_key=${API_KEY}&language=ko-KR&append_to_response=credits`;
+    const url = `${BASE_URL}/movie/${movieId}`;
     try {
         const response = await fetch(url);
         const data = await response.json();
-        if (!data.overview || data.overview.trim() === '') {
-            const enData = await fetchEnOverview(movieId);
-            data.overview = enData.overview || '요약 정보가 없습니다.';
-        }
         const processed = processData(data);
         let genres = '';
         if (data.genres && data.genres.length > 0) {
@@ -62,7 +37,11 @@ async function fetchDetails(movieId) {
             releaseDate = new Date(data.release_date).toLocaleDateString('ko-KR');
         }
         return {
-            ...processed,genres,cast,releaseDate,overview: data.overview 
+            ...processed,
+            genres,
+            cast,
+            releaseDate,
+            overview: data.overview // 상세 모달에서 전체 줄거리 필요
         };
     } catch (error) {
         throw new Error('영화 상세 정보를 가져오는데 실패했습니다.');
@@ -91,10 +70,6 @@ function processData(movie) {
 }
 
 const movieAPI = {
-    API_URL,
-    SEARCH_URL,
-    IMG_URL,
     fetchMovies,
-    fetchEnOverview,
     fetchDetails
 }; 
